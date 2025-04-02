@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Self-Appraisal System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#3b82f6", secondary: "#64748b" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      }
+      .custom-shadow {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      input[type="checkbox"] {
+      appearance: none;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid #d1d5db;
+      border-radius: 4px;
+      background-color: white;
+      cursor: pointer;
+      position: relative;
+      }
+      input[type="checkbox"]:checked {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+      }
+      input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 1px;
+      background-color: white;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      }
+      .custom-switch {
+      position: relative;
+      display: inline-block;
+      width: 3rem;
+      height: 1.5rem;
+      }
+      .custom-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      }
+      .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      transition: .4s;
+      border-radius: 34px;
+      }
+      .slider:before {
+      position: absolute;
+      content: "";
+      height: 1.1rem;
+      width: 1.1rem;
+      left: 0.2rem;
+      bottom: 0.2rem;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      }
+      input:checked + .slider {
+      background-color: #3b82f6;
+      }
+      input:checked + .slider:before {
+      transform: translateX(1.5rem);
+      }
+      .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background-color: #e5e7eb;
+      overflow: hidden;
+      }
+      .progress-value {
+      height: 100%;
+      border-radius: 4px;
+      background-color: #3b82f6;
+      transition: width 0.5s;
+      }
+      .auth-container {
+      min-height: 100vh;
+      background-image: url('https://public.readdy.ai/ai/img_res/63b06a4b11ed65b65c30b98a90c8bdb8.jpg');
+      background-size: cover;
+      background-position: center;
+      }
+      .auth-form {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.9);
+      }
+      .auth-tabs button.active {
+      color: #3b82f6;
+      border-color: #3b82f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="auth-page"
+      class="auth-container flex items-center justify-center px-4"
+    >
+      <div class="auth-form w-full max-w-md rounded-lg shadow-lg p-8">
+        <div class="text-center mb-8">
+          <span class="text-3xl font-['Pacifico'] text-primary">logo</span>
+          <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            Faculty Self-Appraisal
+          </h1>
+          <p class="text-gray-600 mt-1">
+            Access your academic performance dashboard
+          </p>
+        </div>
+
+        <div class="auth-tabs flex border-b border-gray-200 mb-6">
+          <button
+            id="login-tab"
+            class="flex-1 py-3 text-center font-medium text-gray-800 border-b-2 border-primary active"
+          >
+            Login
+          </button>
+          <button
+            id="signup-tab"
+            class="flex-1 py-3 text-center font-medium text-gray-500 border-b-2 border-transparent"
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label
+              for="email"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Email Address</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+              </div>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                placeholder="your.email@university.edu"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Password</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-lock-line"></i>
+                </div>
+              </div>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                class="mr-2"
+              />
+              <label for="remember-me" class="text-sm text-gray-600"
+                >Remember me</label
+              >
+            </div>
+            <a
+              href="#"
+              class="text-sm font-medium text-primary hover:text-primary-dark"
+              >Forgot password?</a
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <!-- Signup Form (Hidden by default) -->
+        <form id="signup-form" class="space-y-4 hidden">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                for="first-name"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >First Name</label
+              >
+              <input
+                type="text"
+                id="first-name"
+                name="first-name"
+                class="px-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="last-name"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                id="last-name"
+                name="last-name"
+                class="px-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="signup-email"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Email Address</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+              </div>
+              <input
+                type="email"
+                id="signup-email"
+                name="email"
+                class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                placeholder="your.email@university.edu"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="department"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Department</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-building-line"></i>
+                </div>
+              </div>
+              <select
+                id="department"
+                name="department"
+                class="pl-10 pr-8 py-2 w-full border border-gray-300 rounded-md text-sm appearance-none bg-white"
+              >
+                <option value="">Select Department</option>
+                <option value="computer-science">Computer Science</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="physics">Physics</option>
+                <option value="chemistry">Chemistry</option>
+                <option value="biology">Biology</option>
+                <option value="engineering">Engineering</option>
+                <option value="business">Business</option>
+                <option value="humanities">Humanities</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-arrow-down-s-line"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="signup-password"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Password</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-lock-line"></i>
+                </div>
+              </div>
+              <input
+                type="password"
+                id="signup-password"
+                name="password"
+                class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <p class="mt-1 text-xs text-gray-500">
+              Password must be at least 8 characters long
+            </p>
+          </div>
+
+          <div>
+            <label
+              for="confirm-password"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Confirm Password</label
+            >
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400"
+                >
+                  <i class="ri-lock-line"></i>
+                </div>
+              </div>
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                class="pl-10 pr-3 py-2 w-full border border-gray-300 rounded-md text-sm"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              class="mr-2"
+              required
+            />
+            <label for="terms" class="text-sm text-gray-600"
+              >I agree to the
+              <a href="#" class="text-primary">Terms of Service</a> and
+              <a href="#" class="text-primary">Privacy Policy</a></label
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-primary text-white py-2 px-4 rounded-md font-medium hover:bg-blue-600 transition-colors whitespace-nowrap !rounded-button"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboard-page" class="hidden">
+      <!-- Header -->
+      <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-['Pacifico'] text-primary">logo</span>
+            <span class="text-lg font-semibold text-gray-800"
+              >Faculty Self-Appraisal</span
+            >
+          </div>
+          <div class="flex items-center space-x-6">
+            <div class="relative">
+              <div
+                class="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
+              >
+                <i class="ri-notification-3-line ri-lg"></i>
+              </div>
+              <span
+                class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"
+              ></span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center"
+              >
+                <i class="ri-user-line ri-lg text-gray-600"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-800">
+                  Dr. Elizabeth Chen
+                </p>
+                <p class="text-xs text-gray-500">Computer Science</p>
+              </div>
+              <div
+                class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer"
+              >
+                <i class="ri-arrow-down-s-line ri-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav class="border-t border-gray-200">
+          <div class="flex px-6">
+            <button
+              class="px-4 py-3 text-sm font-medium text-primary border-b-2 border-primary"
+            >
+              Dashboard
+            </button>
+            <button
+              class="px-4 py-3 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary"
+            >
+              Publications
+            </button>
+            <button
+              class="px-4 py-3 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary"
+            >
+              Events
+            </button>
+            <button
+              class="px-4 py-3 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary"
+            >
+              Lectures
+            </button>
+            <button
+              class="px-4 py-3 text-sm font-medium text-gray-600 hover:text-primary border-b-2 border-transparent hover:border-primary"
+            >
+              Reports
+            </button>
+          </div>
+        </nav>
+      </header>
+      <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-sm hidden lg:block">
+          <div class="p-4">
+            <p class="text-xs uppercase font-semibold text-gray-500 mb-2">
+              Navigation
+            </p>
+            <nav class="space-y-1">
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-primary bg-blue-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-dashboard-line"></i>
+                </div>
+                Dashboard
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-book-2-line"></i>
+                </div>
+                Publications
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-calendar-event-line"></i>
+                </div>
+                Events
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-presentation-line"></i>
+                </div>
+                Lectures
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-award-line"></i>
+                </div>
+                Professional Development
+              </a>
+            </nav>
+          </div>
+          <div class="p-4 border-t border-gray-200">
+            <p class="text-xs uppercase font-semibold text-gray-500 mb-2">
+              Reports
+            </p>
+            <nav class="space-y-1">
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-file-chart-line"></i>
+                </div>
+                Performance Analytics
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-file-pdf-line"></i>
+                </div>
+                Generate Reports
+              </a>
+            </nav>
+          </div>
+          <div class="p-4 border-t border-gray-200">
+            <p class="text-xs uppercase font-semibold text-gray-500 mb-2">
+              Settings
+            </p>
+            <nav class="space-y-1">
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-user-settings-line"></i>
+                </div>
+                Profile Settings
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-lock-line"></i>
+                </div>
+                Security
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                <div class="w-5 h-5 flex items-center justify-center mr-3">
+                  <i class="ri-notification-line"></i>
+                </div>
+                Notifications
+              </a>
+            </nav>
+          </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+          <div class="max-w-7xl mx-auto">
+            <!-- Welcome Section -->
+            <div class="mb-8">
+              <h1 class="text-2xl font-bold text-gray-900">
+                Welcome, Dr. Elizabeth Chen
+              </h1>
+              <p class="text-gray-600">
+                Department of Computer Science | Academic Year 2025-2026
+              </p>
+            </div>
+            <!-- Stats Cards -->
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            >
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-gray-500 text-sm font-medium">
+                    Publications
+                  </h3>
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary"
+                  >
+                    <i class="ri-book-2-line ri-lg"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">12</p>
+                <div class="flex items-center mt-2">
+                  <div
+                    class="w-4 h-4 flex items-center justify-center text-green-500"
+                  >
+                    <i class="ri-arrow-up-line"></i>
+                  </div>
+                  <span class="text-xs font-medium text-green-500 ml-1"
+                    >+3 from last year</span
+                  >
+                </div>
+              </div>
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-gray-500 text-sm font-medium">
+                    Events Attended
+                  </h3>
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary"
+                  >
+                    <i class="ri-calendar-event-line ri-lg"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">8</p>
+                <div class="flex items-center mt-2">
+                  <div
+                    class="w-4 h-4 flex items-center justify-center text-gray-500"
+                  >
+                    <i class="ri-arrow-right-line"></i>
+                  </div>
+                  <span class="text-xs font-medium text-gray-500 ml-1"
+                    >Same as last year</span
+                  >
+                </div>
+              </div>
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-gray-500 text-sm font-medium">
+                    Lectures Delivered
+                  </h3>
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary"
+                  >
+                    <i class="ri-presentation-line ri-lg"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">24</p>
+                <div class="flex items-center mt-2">
+                  <div
+                    class="w-4 h-4 flex items-center justify-center text-green-500"
+                  >
+                    <i class="ri-arrow-up-line"></i>
+                  </div>
+                  <span class="text-xs font-medium text-green-500 ml-1"
+                    >+6 from last year</span
+                  >
+                </div>
+              </div>
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-gray-500 text-sm font-medium">
+                    Performance Score
+                  </h3>
+                  <div
+                    class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary"
+                  >
+                    <i class="ri-award-line ri-lg"></i>
+                  </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-900">87%</p>
+                <div class="flex items-center mt-2">
+                  <div
+                    class="w-4 h-4 flex items-center justify-center text-green-500"
+                  >
+                    <i class="ri-arrow-up-line"></i>
+                  </div>
+                  <span class="text-xs font-medium text-green-500 ml-1"
+                    >+5% from last year</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Progress Section -->
+            <div class="bg-white rounded shadow-sm p-6 mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                Appraisal Completion Status
+              </h2>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700"
+                      >Publications</span
+                    >
+                    <span class="text-sm font-medium text-gray-700">100%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-value" style="width: 100%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700"
+                      >Events</span
+                    >
+                    <span class="text-sm font-medium text-gray-700">75%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-value" style="width: 75%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700"
+                      >Lectures</span
+                    >
+                    <span class="text-sm font-medium text-gray-700">90%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-value" style="width: 90%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium text-gray-700"
+                      >Professional Development</span
+                    >
+                    <span class="text-sm font-medium text-gray-700">60%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-value" style="width: 60%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Recent Activities and Upcoming Evaluations -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <!-- Recent Activities -->
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="text-lg font-semibold text-gray-900">
+                    Recent Activities
+                  </h2>
+                  <button
+                    class="text-sm text-primary font-medium hover:text-primary-dark whitespace-nowrap !rounded-button"
+                  >
+                    View All
+                  </button>
+                </div>
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary flex-shrink-0"
+                    >
+                      <i class="ri-book-2-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Added new publication
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        "Advances in Neural Network Architectures for Image
+                        Recognition"
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">April 1, 2025</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary flex-shrink-0"
+                    >
+                      <i class="ri-calendar-event-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Attended conference
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        "International Conference on Machine Learning"
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">March 28, 2025</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary flex-shrink-0"
+                    >
+                      <i class="ri-presentation-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Delivered guest lecture
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        "Ethical Considerations in AI Development"
+                      </p>
+                      <p class="text-xs text-gray-400 mt-1">March 25, 2025</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Upcoming Evaluations -->
+              <div class="bg-white rounded shadow-sm p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="text-lg font-semibold text-gray-900">
+                    Upcoming Evaluations
+                  </h2>
+                  <button
+                    class="text-sm text-primary font-medium hover:text-primary-dark whitespace-nowrap !rounded-button"
+                  >
+                    View Calendar
+                  </button>
+                </div>
+                <div class="space-y-4">
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-500 flex-shrink-0"
+                    >
+                      <i class="ri-calendar-check-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Annual Performance Review
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        Submit all documents by April 15, 2025
+                      </p>
+                      <div class="flex items-center mt-1">
+                        <div
+                          class="w-4 h-4 flex items-center justify-center text-red-500"
+                        >
+                          <i class="ri-time-line"></i>
+                        </div>
+                        <span class="text-xs font-medium text-red-500 ml-1"
+                          >13 days remaining</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500 flex-shrink-0"
+                    >
+                      <i class="ri-calendar-check-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Department Peer Review
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        Scheduled for April 20, 2025
+                      </p>
+                      <div class="flex items-center mt-1">
+                        <div
+                          class="w-4 h-4 flex items-center justify-center text-yellow-500"
+                        >
+                          <i class="ri-time-line"></i>
+                        </div>
+                        <span class="text-xs font-medium text-yellow-500 ml-1"
+                          >18 days remaining</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <div
+                      class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-500 flex-shrink-0"
+                    >
+                      <i class="ri-calendar-check-line ri-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        Research Output Assessment
+                      </p>
+                      <p class="text-sm text-gray-500">
+                        Scheduled for May 10, 2025
+                      </p>
+                      <div class="flex items-center mt-1">
+                        <div
+                          class="w-4 h-4 flex items-center justify-center text-green-500"
+                        >
+                          <i class="ri-time-line"></i>
+                        </div>
+                        <span class="text-xs font-medium text-green-500 ml-1"
+                          >38 days remaining</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Quick Actions -->
+            <div class="bg-white rounded shadow-sm p-6 mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                Quick Actions
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button
+                  class="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-blue-50 transition-colors whitespace-nowrap !rounded-button"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-3"
+                  >
+                    <i class="ri-add-line ri-lg"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-800"
+                    >Add Publication</span
+                  >
+                </button>
+                <button
+                  class="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-blue-50 transition-colors whitespace-nowrap !rounded-button"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-3"
+                  >
+                    <i class="ri-calendar-event-line ri-lg"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-800"
+                    >Log Event</span
+                  >
+                </button>
+                <button
+                  class="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-blue-50 transition-colors whitespace-nowrap !rounded-button"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-3"
+                  >
+                    <i class="ri-presentation-line ri-lg"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-800"
+                    >Record Lecture</span
+                  >
+                </button>
+                <button
+                  class="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-md hover:border-primary hover:bg-blue-50 transition-colors whitespace-nowrap !rounded-button"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary mb-3"
+                  >
+                    <i class="ri-file-pdf-line ri-lg"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-800"
+                    >Generate Report</span
+                  >
+                </button>
+              </div>
+            </div>
+            <!-- Performance Analytics -->
+            <div class="bg-white rounded shadow-sm p-6 mb-8">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">
+                  Performance Analytics
+                </h2>
+                <div class="flex space-x-2">
+                  <button
+                    class="px-3 py-1 text-sm font-medium bg-blue-50 text-primary rounded-full whitespace-nowrap !rounded-button"
+                  >
+                    This Year
+                  </button>
+                  <button
+                    class="px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-full whitespace-nowrap !rounded-button"
+                  >
+                    Last Year
+                  </button>
+                </div>
+              </div>
+              <div id="performance-chart" class="w-full h-80"></div>
+            </div>
+            <!-- Recent Publications -->
+            <div class="bg-white rounded shadow-sm p-6 mb-8">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900">
+                  Recent Publications
+                </h2>
+                <button
+                  class="text-sm text-primary font-medium hover:text-primary-dark whitespace-nowrap !rounded-button"
+                >
+                  View All
+                </button>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Title
+                      </th>
+                      <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Journal/Conference
+                      </th>
+                      <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Date
+                      </th>
+                      <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Status
+                      </th>
+                      <th
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                          Advances in Neural Network Architectures for Image
+                          Recognition
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">
+                          IEEE Transactions on Neural Networks
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">April 1, 2025</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >Published</span
+                        >
+                      </td>
+                      <td
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                      >
+                        <div class="flex space-x-2">
+                          <button
+                            class="text-primary hover:text-primary-dark whitespace-nowrap !rounded-button"
+                          >
+                            View
+                          </button>
+                          <button
+                            class="text-gray-600 hover:text-gray-900 whitespace-nowrap !rounded-button"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                          Ethical Considerations in AI Development
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">
+                          Journal of AI Ethics
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">March 15, 2025</div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >Published</span
+                        >
+                      </td>
+                      <td
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                      >
+                        <div class="flex space-x-2">
+                          <button
+                            class="text-primary hover:text-primary-dark whitespace-nowrap !rounded-button"
+                          >
+                            View
+                          </button>
+                          <button
+                            class="text-gray-600 hover:text-gray-900 whitespace-nowrap !rounded-button"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">
+                          Quantum Computing Applications in Cryptography
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">
+                          ACM Journal of Quantum Computing
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">
+                          February 28, 2025
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <span
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                          >Under Review</span
+                        >
+                      </td>
+                      <td
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                      >
+                        <div class="flex space-x-2">
+                          <button
+                            class="text-primary hover:text-primary-dark whitespace-nowrap !rounded-button"
+                          >
+                            View
+                          </button>
+                          <button
+                            class="text-gray-600 hover:text-gray-900 whitespace-nowrap !rounded-button"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+      <!-- Footer -->
+      <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="max-w-7xl mx-auto px-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">
+                Quick Links
+              </h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Help Center</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Documentation</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Faculty Directory</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Academic Calendar</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Support</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Contact Support</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >System Status</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Report an Issue</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-sm text-gray-600 hover:text-primary"
+                    >Privacy Policy</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900 mb-3">Contact</h3>
+              <ul class="space-y-2">
+                <li class="flex items-center text-sm text-gray-600">
+                  <div class="w-4 h-4 flex items-center justify-center mr-2">
+                    <i class="ri-mail-line"></i>
+                  </div>
+                  support@faculty-appraisal.edu
+                </li>
+                <li class="flex items-center text-sm text-gray-600">
+                  <div class="w-4 h-4 flex items-center justify-center mr-2">
+                    <i class="ri-phone-line"></i>
+                  </div>
+                  +1 (555) 123-4567
+                </li>
+                <li class="flex items-center text-sm text-gray-600">
+                  <div class="w-4 h-4 flex items-center justify-center mr-2">
+                    <i class="ri-question-line"></i>
+                  </div>
+                  Help Desk: Mon-Fri, 8am-5pm
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="mt-8 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center"
+          >
+            <p class="text-sm text-gray-500">
+              © 2025 Faculty Self-Appraisal System. All rights reserved.
+            </p>
+            <p class="text-sm text-gray-500 mt-2 md:mt-0">Version 2.5.0</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Auth page functionality
+        const loginTab = document.getElementById("login-tab");
+        const signupTab = document.getElementById("signup-tab");
+        const loginForm = document.getElementById("login-form");
+        const signupForm = document.getElementById("signup-form");
+        const authPage = document.getElementById("auth-page");
+        const dashboardPage = document.getElementById("dashboard-page");
+
+        // Tab switching
+        loginTab.addEventListener("click", function () {
+          loginTab.classList.add("active", "text-primary", "border-primary");
+          loginTab.classList.remove("text-gray-500", "border-transparent");
+          signupTab.classList.remove("active", "text-primary", "border-primary");
+          signupTab.classList.add("text-gray-500", "border-transparent");
+          loginForm.classList.remove("hidden");
+          signupForm.classList.add("hidden");
+        });
+
+        signupTab.addEventListener("click", function () {
+          signupTab.classList.add("active", "text-primary", "border-primary");
+          signupTab.classList.remove("text-gray-500", "border-transparent");
+          loginTab.classList.remove("active", "text-primary", "border-primary");
+          loginTab.classList.add("text-gray-500", "border-transparent");
+          signupForm.classList.remove("hidden");
+          loginForm.classList.add("hidden");
+        });
+
+        // Form submission
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Simple validation
+          if (email && password) {
+            // Show dashboard and hide auth page
+            authPage.classList.add("hidden");
+            dashboardPage.classList.remove("hidden");
+          } else {
+            // Show error message
+            const errorMsg = document.createElement("p");
+            errorMsg.className = "text-red-500 text-sm mt-2";
+            errorMsg.textContent = "Please enter both email and password";
+
+            // Remove any existing error message
+            const existingError = loginForm.querySelector(".text-red-500");
+            if (existingError) {
+              existingError.remove();
+            }
+
+            loginForm.appendChild(errorMsg);
+          }
+        });
+
+        signupForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const firstName = document.getElementById("first-name").value;
+          const lastName = document.getElementById("last-name").value;
+          const email = document.getElementById("signup-email").value;
+          const department = document.getElementById("department").value;
+          const password = document.getElementById("signup-password").value;
+          const confirmPassword = document.getElementById("confirm-password").value;
+          const terms = document.getElementById("terms").checked;
+
+          // Simple validation
+          if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !department ||
+            !password ||
+            !confirmPassword
+          ) {
+            const errorMsg = document.createElement("p");
+            errorMsg.className = "text-red-500 text-sm mt-2";
+            errorMsg.textContent = "Please fill in all fields";
+
+            // Remove any existing error message
+            const existingError = signupForm.querySelector(".text-red-500");
+            if (existingError) {
+              existingError.remove();
+            }
+
+            signupForm.appendChild(errorMsg);
+            return;
+          }
+
+          if (password !== confirmPassword) {
+            const errorMsg = document.createElement("p");
+            errorMsg.className = "text-red-500 text-sm mt-2";
+            errorMsg.textContent = "Passwords do not match";
+
+            // Remove any existing error message
+            const existingError = signupForm.querySelector(".text-red-500");
+            if (existingError) {
+              existingError.remove();
+            }
+
+            signupForm.appendChild(errorMsg);
+            return;
+          }
+
+          if (!terms) {
+            const errorMsg = document.createElement("p");
+            errorMsg.className = "text-red-500 text-sm mt-2";
+            errorMsg.textContent =
+              "You must agree to the Terms of Service and Privacy Policy";
+
+            // Remove any existing error message
+            const existingError = signupForm.querySelector(".text-red-500");
+            if (existingError) {
+              existingError.remove();
+            }
+
+            signupForm.appendChild(errorMsg);
+            return;
+          }
+
+          // Show success message and switch to login tab
+          const successMsg = document.createElement("div");
+          successMsg.className = "bg-green-50 text-green-800 p-3 rounded-md mb-4";
+          successMsg.textContent = "Account created successfully! Please log in.";
+
+          signupForm.prepend(successMsg);
+
+          // Clear form
+          signupForm.reset();
+
+          // Switch to login tab after 2 seconds
+          setTimeout(function () {
+            loginTab.click();
+            successMsg.remove();
+          }, 2000);
+        });
+
+        // Dashboard chart initialization
+        const performanceChart = document.getElementById("performance-chart");
+        if (performanceChart) {
+          const chart = echarts.init(performanceChart);
+          const option = {
+            animation: false,
+            tooltip: {
+              trigger: "axis",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderColor: "#e5e7eb",
+              borderWidth: 1,
+              textStyle: {
+                color: "#1f2937",
+              },
+            },
+            legend: {
+              data: ["Publications", "Events", "Lectures", "Overall Score"],
+              bottom: 0,
+            },
+            grid: {
+              left: "3%",
+              right: "3%",
+              top: "3%",
+              bottom: "15%",
+              containLabel: true,
+            },
+            xAxis: {
+              type: "category",
+              boundaryGap: false,
+              data: ["Q1", "Q2", "Q3", "Q4"],
+              axisLine: {
+                lineStyle: {
+                  color: "#e5e7eb",
+                },
+              },
+              axisLabel: {
+                color: "#1f2937",
+              },
+            },
+            yAxis: {
+              type: "value",
+              axisLine: {
+                show: false,
+              },
+              axisLabel: {
+                color: "#1f2937",
+              },
+              splitLine: {
+                lineStyle: {
+                  color: "#e5e7eb",
+                },
+              },
+            },
+            series: [
+              {
+                name: "Publications",
+                type: "line",
+                stack: "Total",
+                smooth: true,
+                lineStyle: {
+                  width: 3,
+                },
+                symbol: "none",
+                itemStyle: {
+                  color: "rgba(87, 181, 231, 1)",
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(87, 181, 231, 0.2)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(87, 181, 231, 0.0)",
+                    },
+                  ]),
+                },
+                data: [2, 3, 4, 3],
+              },
+              {
+                name: "Events",
+                type: "line",
+                stack: "Total",
+                smooth: true,
+                lineStyle: {
+                  width: 3,
+                },
+                symbol: "none",
+                itemStyle: {
+                  color: "rgba(141, 211, 199, 1)",
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(141, 211, 199, 0.2)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(141, 211, 199, 0.0)",
+                    },
+                  ]),
+                },
+                data: [1, 2, 3, 2],
+              },
+              {
+                name: "Lectures",
+                type: "line",
+                stack: "Total",
+                smooth: true,
+                lineStyle: {
+                  width: 3,
+                },
+                symbol: "none",
+                itemStyle: {
+                  color: "rgba(251, 191, 114, 1)",
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    {
+                      offset: 0,
+                      color: "rgba(251, 191, 114, 0.2)",
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(251, 191, 114, 0.0)",
+                    },
+                  ]),
+                },
+                data: [5, 6, 7, 6],
+              },
+              {
+                name: "Overall Score",
+                type: "line",
+                smooth: true,
+                lineStyle: {
+                  width: 4,
+                },
+                symbol: "none",
+                itemStyle: {
+                  color: "rgba(252, 141, 98, 1)",
+                },
+                data: [78, 82, 88, 87],
+              },
+            ],
+          };
+          chart.setOption(option);
+          window.addEventListener("resize", function () {
+            chart.resize();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

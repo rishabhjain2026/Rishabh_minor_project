@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Lectures</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#4f46e5", secondary: "#6366f1" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Inter', sans-serif;
+      }
+      .lecture-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .lecture-card {
+          transition: all 0.2s ease;
+      }
+      input[type="search"]::-webkit-search-decoration,
+      input[type="search"]::-webkit-search-cancel-button,
+      input[type="search"]::-webkit-search-results-button,
+      input[type="search"]::-webkit-search-results-decoration {
+          display: none;
+      }
+      input[type="search"] {
+          -webkit-appearance: none;
+      }
+      .custom-select {
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.5rem center;
+          background-size: 1.5em 1.5em;
+      }
+      .skeleton {
+          background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+          background-size: 200% 100%;
+          animation: skeleton-loading 1.5s infinite;
+      }
+      @keyframes skeleton-loading {
+          0% {
+              background-position: 200% 0;
+          }
+          100% {
+              background-position: -200% 0;
+          }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between"
+      >
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold text-gray-900">Faculty Lectures</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="#" class="text-gray-600 hover:text-primary">Home</a>
+          <a href="#" class="text-gray-600 hover:text-primary">Departments</a>
+          <a href="#" class="text-gray-600 hover:text-primary">Faculty</a>
+          <a href="#" class="text-gray-600 hover:text-primary">Calendar</a>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="bg-white shadow rounded p-6 mb-8">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6"
+        >
+          <h2 class="text-xl font-semibold text-gray-800">Filter Lectures</h2>
+          <div class="relative w-full md:w-64">
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+            >
+              <div
+                class="w-5 h-5 flex items-center justify-center text-gray-500"
+              >
+                <i class="ri-search-line"></i>
+              </div>
+            </div>
+            <input
+              type="search"
+              id="search"
+              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary text-sm"
+              placeholder="Search lectures..."
+            />
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-4">
+          <div class="w-full md:w-auto">
+            <label
+              for="semester"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Semester</label
+            >
+            <div class="relative">
+              <select
+                id="semester"
+                class="custom-select w-full md:w-48 px-4 py-2 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary text-sm pr-8"
+              >
+                <option value="">All Semesters</option>
+                <option value="spring2025">Spring 2025</option>
+                <option value="fall2024">Fall 2024</option>
+                <option value="spring2024" selected>Spring 2024</option>
+                <option value="fall2023">Fall 2023</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="w-full md:w-auto">
+            <label
+              for="department"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Department</label
+            >
+            <div class="relative">
+              <select
+                id="department"
+                class="custom-select w-full md:w-48 px-4 py-2 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary text-sm pr-8"
+              >
+                <option value="">All Departments</option>
+                <option value="cs">Computer Science</option>
+                <option value="eng">Engineering</option>
+                <option value="math">Mathematics</option>
+                <option value="phys">Physics</option>
+                <option value="chem">Chemistry</option>
+                <option value="bio">Biology</option>
+                <option value="biz">Business</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="w-full md:w-auto">
+            <label
+              for="instructor"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Instructor</label
+            >
+            <div class="relative">
+              <select
+                id="instructor"
+                class="custom-select w-full md:w-48 px-4 py-2 bg-white border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-primary text-sm pr-8"
+              >
+                <option value="">All Instructors</option>
+                <option value="james">Dr. James Wilson</option>
+                <option value="sarah">Dr. Sarah Chen</option>
+                <option value="michael">Prof. Michael Johnson</option>
+                <option value="emily">Dr. Emily Rodriguez</option>
+                <option value="david">Prof. David Kim</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+          >
+            Spring 2024
+            <button
+              type="button"
+              class="ml-1 text-blue-600 hover:text-blue-800"
+            >
+              <div class="w-4 h-4 flex items-center justify-center">
+                <i class="ri-close-line"></i>
+              </div>
+            </button>
+          </div>
+          <button
+            type="button"
+            class="text-sm text-primary hover:text-primary/80 font-medium !rounded-button px-2 py-1"
+          >
+            Clear all filters
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Lecture Card 1 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/dfbaf0897c7793aedf019baeaafe3065.jpg"
+              alt="Advanced Algorithms lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              1h 15m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Advanced Algorithms: Graph Theory Applications
+              </h3>
+              <span
+                class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >CS</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/638700d57dfb0c2fd22d6b9abcc964d7.jpg"
+                  alt="Dr. James Wilson"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Dr. James Wilson</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>April 2, 2024</span>
+              <span>10:30 AM - 11:45 AM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lecture Card 2 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/b793328969d5c67932a5efd2c8a29bff.jpg"
+              alt="Robotics Fundamentals lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              1h 30m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Robotics Fundamentals: Motion Planning and Control
+              </h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >ENG</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/6ea8ce7d3e3b6e04e1b717877c27ada6.jpg"
+                  alt="Dr. Sarah Chen"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Dr. Sarah Chen</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>March 28, 2024</span>
+              <span>2:00 PM - 3:30 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lecture Card 3 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/941b2e4c3a9582a759c496b8d1c56752.jpg"
+              alt="Advanced Calculus lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              1h 45m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Advanced Calculus: Applications in Physics and Engineering
+              </h3>
+              <span
+                class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >MATH</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/3e8ab8dce7e323a8566f6c62f0083d04.jpg"
+                  alt="Prof. Michael Johnson"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Prof. Michael Johnson</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>March 25, 2024</span>
+              <span>9:00 AM - 10:45 AM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lecture Card 4 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/9efc4c92d247508d9f7ec103f26d7c68.jpg"
+              alt="Quantum Physics lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              2h 00m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Quantum Physics: Entanglement and Quantum Computing
+              </h3>
+              <span
+                class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >PHYS</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/c8ef3b0828cc889496cd0a25625a8ff4.jpg"
+                  alt="Dr. Emily Rodriguez"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Dr. Emily Rodriguez</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>March 21, 2024</span>
+              <span>1:00 PM - 3:00 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lecture Card 5 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/234624f8f7566c7119acd7b458cac894.jpg"
+              alt="Organic Chemistry lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              1h 30m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Organic Chemistry: Synthesis and Reaction Mechanisms
+              </h3>
+              <span
+                class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >CHEM</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/a805427edacc7a460a4438fc6558d0b5.jpg"
+                  alt="Prof. David Kim"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Prof. David Kim</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>March 18, 2024</span>
+              <span>11:00 AM - 12:30 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lecture Card 6 -->
+        <div class="lecture-card bg-white rounded shadow overflow-hidden">
+          <div class="relative">
+            <img
+              src="https://public.readdy.ai/ai/img_res/11cb8f5a7fc6f3db0b7e4dde0013b3e4.jpg"
+              alt="Molecular Biology lecture"
+              class="w-full h-48 object-cover object-top"
+            />
+            <div
+              class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded"
+            >
+              1h 15m
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+                Molecular Biology: Gene Expression and Regulation
+              </h3>
+              <span
+                class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full whitespace-nowrap"
+                >BIO</span
+              >
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 rounded-full overflow-hidden mr-2">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/0c695a2ca7ba6ad5fcdead45895a1578.jpg"
+                  alt="Dr. Amanda Patel"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <span class="text-sm text-gray-700">Dr. Amanda Patel</span>
+            </div>
+            <div
+              class="flex justify-between items-center text-sm text-gray-500"
+            >
+              <span>March 15, 2024</span>
+              <span>3:30 PM - 4:45 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skeleton Loading Card -->
+        <div class="bg-white rounded shadow overflow-hidden">
+          <div class="skeleton w-full h-48"></div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div class="skeleton w-3/4 h-6 rounded"></div>
+              <div class="skeleton w-12 h-6 rounded-full"></div>
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="skeleton w-8 h-8 rounded-full mr-2"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="skeleton w-1/4 h-4 rounded"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton Loading Card -->
+        <div class="bg-white rounded shadow overflow-hidden">
+          <div class="skeleton w-full h-48"></div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div class="skeleton w-3/4 h-6 rounded"></div>
+              <div class="skeleton w-12 h-6 rounded-full"></div>
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="skeleton w-8 h-8 rounded-full mr-2"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="skeleton w-1/4 h-4 rounded"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Skeleton Loading Card -->
+        <div class="bg-white rounded shadow overflow-hidden">
+          <div class="skeleton w-full h-48"></div>
+          <div class="p-4">
+            <div class="flex justify-between items-start mb-2">
+              <div class="skeleton w-3/4 h-6 rounded"></div>
+              <div class="skeleton w-12 h-6 rounded-full"></div>
+            </div>
+            <div class="flex items-center mb-3">
+              <div class="skeleton w-8 h-8 rounded-full mr-2"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="skeleton w-1/4 h-4 rounded"></div>
+              <div class="skeleton w-1/3 h-4 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-center">
+        <button
+          type="button"
+          class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 !rounded-button shadow-sm whitespace-nowrap"
+        >
+          Load More Lectures
+        </button>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-lg font-semibold mb-4">University Lectures</h3>
+            <p class="text-gray-300 text-sm">
+              Access world-class lectures from our distinguished faculty members
+              across various departments.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li><a href="#" class="hover:text-white">Home</a></li>
+              <li><a href="#" class="hover:text-white">Departments</a></li>
+              <li><a href="#" class="hover:text-white">Faculty</a></li>
+              <li><a href="#" class="hover:text-white">Calendar</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Resources</h3>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li><a href="#" class="hover:text-white">Lecture Archives</a></li>
+              <li>
+                <a href="#" class="hover:text-white">Academic Calendar</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white">Research Publications</a>
+              </li>
+              <li><a href="#" class="hover:text-white">Support</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Contact</h3>
+            <ul class="space-y-2 text-sm text-gray-300">
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                  <i class="ri-mail-line"></i>
+                </div>
+                <span>lectures@university.edu</span>
+              </li>
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                  <i class="ri-phone-line"></i>
+                </div>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <div class="w-5 h-5 flex items-center justify-center mr-2">
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <span>123 University Ave, Campus Building</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <p class="text-sm text-gray-400">
+            © 2024 University Lecture Series. All rights reserved.
+          </p>
+          <div class="flex space-x-4 mt-4 md:mt-0">
+            <a href="#" class="text-gray-400 hover:text-white">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-facebook-fill"></i>
+              </div>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-twitter-x-fill"></i>
+              </div>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-instagram-fill"></i>
+              </div>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <div class="w-6 h-6 flex items-center justify-center">
+                <i class="ri-youtube-fill"></i>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Simulate loading completion after 2 seconds
+        setTimeout(() => {
+          const skeletons = document.querySelectorAll(".skeleton");
+          skeletons.forEach((skeleton) => {
+            skeleton.classList.remove("skeleton");
+          });
+        }, 2000);
+
+        // Filter functionality
+        const semesterSelect = document.getElementById("semester");
+        const departmentSelect = document.getElementById("department");
+        const instructorSelect = document.getElementById("instructor");
+        const searchInput = document.getElementById("search");
+
+        // Add event listeners for filter changes
+        [semesterSelect, departmentSelect, instructorSelect, searchInput].forEach(
+          (element) => {
+            element.addEventListener("change", updateFilters);
+          },
+        );
+
+        searchInput.addEventListener("input", updateFilters);
+
+        function updateFilters() {
+          console.log("Filters updated");
+          // In a real application, this would filter the lecture cards
+          // For this demo, we're just logging the change
+        }
+
+        // Make cards clickable
+        const lectureCards = document.querySelectorAll(".lecture-card");
+        lectureCards.forEach((card) => {
+          card.addEventListener("click", function () {
+            const title = this.querySelector("h3").textContent;
+            console.log(`Clicked on lecture: ${title}`);
+            // In a real application, this would navigate to the lecture details page
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

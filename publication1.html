@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publications - Faculty Self-Appraisal System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#4f46e5", secondary: "#10b981" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+          font-family: 'Inter', sans-serif;
+          background-color: #f9fafb;
+      }
+      input:focus, select:focus, textarea:focus {
+          outline: none;
+          border-color: #4f46e5;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+      .custom-checkbox {
+          position: relative;
+          display: inline-block;
+          width: 18px;
+          height: 18px;
+          border: 2px solid #d1d5db;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+      }
+      .custom-checkbox.checked {
+          background-color: #4f46e5;
+          border-color: #4f46e5;
+      }
+      .custom-checkbox.checked::after {
+          content: '';
+          position: absolute;
+          left: 5px;
+          top: 2px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+      }
+      .custom-switch {
+          position: relative;
+          display: inline-block;
+          width: 44px;
+          height: 24px;
+      }
+      .custom-switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+      }
+      .switch-slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #e5e7eb;
+          transition: .4s;
+          border-radius: 34px;
+      }
+      .switch-slider:before {
+          position: absolute;
+          content: "";
+          height: 18px;
+          width: 18px;
+          left: 3px;
+          bottom: 3px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+      }
+      input:checked + .switch-slider {
+          background-color: #4f46e5;
+      }
+      input:checked + .switch-slider:before {
+          transform: translateX(20px);
+      }
+      .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: white;
+          min-width: 200px;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          z-index: 50;
+          border-radius: 8px;
+          overflow: hidden;
+      }
+      .dropdown:hover .dropdown-content {
+          display: block;
+      }
+      .tag {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.25rem 0.5rem;
+          background-color: #e5e7eb;
+          border-radius: 9999px;
+          margin-right: 0.5rem;
+          margin-bottom: 0.5rem;
+          font-size: 0.75rem;
+      }
+      .tag .remove {
+          margin-left: 0.25rem;
+          cursor: pointer;
+      }
+      .modal {
+          display: none;
+          position: fixed;
+          z-index: 100;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgba(0, 0, 0, 0.5);
+      }
+      .modal-content {
+          background-color: #fefefe;
+          margin: 5% auto;
+          border-radius: 8px;
+          width: 80%;
+          max-width: 800px;
+          animation: modalFadeIn 0.3s;
+      }
+      @keyframes modalFadeIn {
+          from {opacity: 0; transform: translateY(-20px);}
+          to {opacity: 1; transform: translateY(0);}
+      }
+      .toast {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: #4f46e5;
+          color: white;
+          padding: 1rem;
+          border-radius: 8px;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+          display: none;
+          z-index: 1000;
+          animation: toastFadeIn 0.3s;
+      }
+      @keyframes toastFadeIn {
+          from {opacity: 0; transform: translateY(20px);}
+          to {opacity: 1; transform: translateY(0);}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <div class="hidden md:flex md:flex-shrink-0">
+        <div class="flex flex-col w-64 border-r border-gray-200 bg-white">
+          <div class="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
+            <div class="flex items-center flex-shrink-0 px-4">
+              <h1 class="text-2xl font-['Pacifico'] text-primary">logo</h1>
+            </div>
+            <div class="mt-8 px-4">
+              <div class="flex flex-col items-center">
+                <div
+                  class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden"
+                >
+                  <img
+                    src="https://public.readdy.ai/ai/img_res/0130e8f9d7d76b8195292ae23d1265fb.jpg"
+                    alt="Profile"
+                    class="w-full h-full object-cover object-top"
+                  />
+                </div>
+                <h2 class="mt-3 text-lg font-medium text-gray-900">
+                  Rishabh jain
+                </h2>
+                <p class="text-sm text-gray-500">Associate Professor</p>
+                <p class="text-xs text-gray-400">Computer Science Dept.</p>
+              </div>
+            </div>
+            <nav class="mt-8 flex-1 px-2 space-y-1">
+              <a
+                href="/dashbord1.html"
+                data-readdy="true"
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-dashboard-line"></i>
+                </div>
+                Dashboard
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-file-list-line"></i>
+                </div>
+                Publications
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-calendar-event-line"></i>
+                </div>
+                Events
+              </a>
+              <a
+                href="/lecture1.html"
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-presentation-line"></i>
+                </div>
+                Lectures
+              </a>
+              <a
+                href="/dashbord.html"
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-bar-chart-line"></i>
+                </div>
+                Reports
+              </a>
+              <a
+                href="#"
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+              >
+                <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                  <i class="ri-settings-line"></i>
+                </div>
+                Settings
+              </a>
+            </nav>
+          </div>
+          <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
+            <a
+              href="/signup_chatgpt.html"
+              class="flex items-center text-sm font-medium text-gray-700 hover:text-primary"
+            >
+              <div class="w-5 h-5 mr-3 flex items-center justify-center">
+                <i class="ri-logout-box-line"></i>
+              </div>
+              Logout
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="flex flex-col flex-1 overflow-hidden">
+        <!-- Top header -->
+        <div class="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+          <button
+            type="button"
+            class="px-4 border-r border-gray-200 text-gray-500 md:hidden"
+          >
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-menu-line"></i>
+            </div>
+          </button>
+          <div class="flex-1 px-4 flex justify-between">
+            <div class="flex-1 flex items-center">
+              <div class="w-full max-w-lg lg:max-w-xs">
+                <label for="search" class="sr-only">Search</label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  >
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-search-line"></i>
+                    </div>
+                  </div>
+                  <input
+                    id="search"
+                    name="search"
+                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:border-primary sm:text-sm"
+                    placeholder="Search publications..."
+                    type="search"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="ml-4 flex items-center md:ml-6 space-x-4">
+              <button
+                type="button"
+                class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <div class="w-6 h-6 flex items-center justify-center">
+                  <i class="ri-notification-3-line"></i>
+                </div>
+              </button>
+              <button
+                type="button"
+                class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <div class="w-6 h-6 flex items-center justify-center">
+                  <i class="ri-question-line"></i>
+                </div>
+              </button>
+              <div class="relative">
+                <button
+                  type="button"
+                  class="flex max-w-xs items-center text-sm rounded-full focus:outline-none"
+                  id="user-menu-button"
+                >
+                  <span class="sr-only">Open user menu</span>
+                  <div
+                    class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden"
+                  >
+                    <img
+                      src="https://public.readdy.ai/ai/img_res/78cafb8b15a4d663feab9c210f175bd8.jpg"
+                      alt="Profile"
+                      class="w-full h-full object-cover object-top"
+                    />
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content area -->
+        <main class="flex-1 relative overflow-y-auto focus:outline-none">
+          <div class="py-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <div class="flex items-center">
+                <a
+                  href="https://readdy.ai/home/0d5fb80c-86bc-4726-ba0b-4e746f70d694/0f2f6ef4-ab8c-44fa-91db-c1c09882790d"
+                  data-readdy="true"
+                  class="flex items-center text-gray-500 hover:text-primary mr-4"
+                >
+                  <div class="w-5 h-5 flex items-center justify-center">
+                    <i class="ri-arrow-left-line"></i>
+                  </div>
+                  <span class="ml-1 text-sm">Back to Dashboard</span>
+                </a>
+                <nav class="flex" aria-label="Breadcrumb">
+                  <ol class="flex items-center space-x-2">
+                    <li>
+                      <div class="flex items-center">
+                        <a
+                          href="https://readdy.ai/home/0d5fb80c-86bc-4726-ba0b-4e746f70d694/0f2f6ef4-ab8c-44fa-91db-c1c09882790d"
+                          data-readdy="true"
+                          class="text-sm font-medium text-gray-500 hover:text-gray-700"
+                          >Dashboard</a
+                        >
+                      </div>
+                    </li>
+                    <li>
+                      <div class="flex items-center">
+                        <div
+                          class="w-4 h-4 flex items-center justify-center text-gray-400"
+                        >
+                          <i class="ri-arrow-right-s-line"></i>
+                        </div>
+                        <a
+                          href="#"
+                          class="ml-2 text-sm font-medium text-primary"
+                          aria-current="page"
+                          >Publications</a
+                        >
+                      </div>
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div
+                class="mt-4 flex flex-col md:flex-row md:items-center md:justify-between"
+              >
+                <div>
+                  <h1 class="text-2xl font-semibold text-gray-900">
+                    Publications
+                  </h1>
+                  <p class="mt-1 text-sm text-gray-500">
+                    Manage your academic publications and research output
+                  </p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                  <button
+                    type="button"
+                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-button text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+                    onclick="openModal('addPublicationModal')"
+                  >
+                    <div class="w-4 h-4 mr-2 flex items-center justify-center">
+                      <i class="ri-add-line"></i>
+                    </div>
+                    Add New Publication
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <!-- Filters and search section -->
+              <div class="mt-6 bg-white shadow rounded-lg overflow-hidden">
+                <div class="px-4 py-5 sm:p-6">
+                  <div
+                    class="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4"
+                  >
+                    <div class="w-full md:w-1/4">
+                      <label
+                        for="publication-type"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Publication Type</label
+                      >
+                      <div class="relative">
+                        <select
+                          id="publication-type"
+                          name="publication-type"
+                          class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-md"
+                        >
+                          <option value="">All Types</option>
+                          <option value="journal">Journal Article</option>
+                          <option value="conference">Conference Paper</option>
+                          <option value="book">Book Chapter</option>
+                          <option value="patent">Patent</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <div
+                          class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                        >
+                          <div
+                            class="w-5 h-5 flex items-center justify-center text-gray-400"
+                          >
+                            <i class="ri-arrow-down-s-line"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4">
+                      <label
+                        for="publication-year"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Publication Year</label
+                      >
+                      <div class="relative">
+                        <select
+                          id="publication-year"
+                          name="publication-year"
+                          class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-md"
+                        >
+                          <option value="">All Years</option>
+                          <option value="2025">2025</option>
+                          <option value="2024">2024</option>
+                          <option value="2023">2023</option>
+                          <option value="2022">2022</option>
+                          <option value="2021">2021</option>
+                          <option value="older">2020 & Older</option>
+                        </select>
+                        <div
+                          class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                        >
+                          <div
+                            class="w-5 h-5 flex items-center justify-center text-gray-400"
+                          >
+                            <i class="ri-arrow-down-s-line"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4">
+                      <label
+                        for="publication-status"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Status</label
+                      >
+                      <div class="relative">
+                        <select
+                          id="publication-status"
+                          name="publication-status"
+                          class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-md"
+                        >
+                          <option value="">All Status</option>
+                          <option value="published">Published</option>
+                          <option value="in-press">In Press</option>
+                          <option value="under-review">Under Review</option>
+                          <option value="in-progress">In Progress</option>
+                          <option value="rejected">Rejected</option>
+                        </select>
+                        <div
+                          class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                        >
+                          <div
+                            class="w-5 h-5 flex items-center justify-center text-gray-400"
+                          >
+                            <i class="ri-arrow-down-s-line"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4">
+                      <label
+                        for="sort-by"
+                        class="block text-sm font-medium text-gray-700 mb-1"
+                        >Sort By</label
+                      >
+                      <div class="relative">
+                        <select
+                          id="sort-by"
+                          name="sort-by"
+                          class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-primary focus:border-primary rounded-md"
+                        >
+                          <option value="date-desc">Date (Newest First)</option>
+                          <option value="date-asc">Date (Oldest First)</option>
+                          <option value="title">Title (A-Z)</option>
+                          <option value="citations-desc">
+                            Citations (Highest First)
+                          </option>
+                          <option value="citations-asc">
+                            Citations (Lowest First)
+                          </option>
+                        </select>
+                        <div
+                          class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                        >
+                          <div
+                            class="w-5 h-5 flex items-center justify-center text-gray-400"
+                          >
+                            <i class="ri-arrow-down-s-line"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 flex items-center">
+                    <button
+                      type="button"
+                      class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                    >
+                      <div
+                        class="w-4 h-4 mr-2 flex items-center justify-center"
+                      >
+                        <i class="ri-filter-line"></i>
+                      </div>
+                      Apply Filters
+                    </button>
+                    <button
+                      type="button"
+                      class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                    >
+                      <div
+                        class="w-4 h-4 mr-2 flex items-center justify-center"
+                      >
+                        <i class="ri-refresh-line"></i>
+                      </div>
+                      Reset
+                    </button>
+                    <div class="ml-auto flex items-center">
+                      <span class="text-sm text-gray-500"
+                        >24 publications found</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Publications table -->
+              <div class="mt-6 bg-white shadow rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                      <tr>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Title
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Journal/Conference
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Date
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Co-Authors
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Status
+                        </th>
+                        <th
+                          scope="col"
+                          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Citations
+                        </th>
+                        <th scope="col" class="relative px-6 py-3">
+                          <span class="sr-only">Actions</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Advanced Neural Networks in Education: A
+                            Comprehensive Review
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            DOI: 10.1234/jed.2025.123456
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            Journal of Educational Technology
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            Vol. 45, Issue 2, pp. 123-145
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Mar 25, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Sarah Johnson, Michael Lee, David Wong
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            Published
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          12
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                              onclick="openModal('viewPublicationModal')"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                              onclick="openModal('editPublicationModal')"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                              onclick="confirmDelete()"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Ethical Implications of AI in Higher Education
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            DOI: 10.1234/aie.2025.654321
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            International Conference on AI Ethics
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            Proceedings, pp. 78-92
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Feb 18, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Emily Zhang, Thomas Anderson
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            Published
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          8
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Machine Learning Approaches for Student Performance
+                            Prediction
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            DOI: 10.1109/TLT.2025.1234567
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            IEEE Transactions on Learning Technologies
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            Vol. 18, Issue 1, pp. 45-58
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Jan 10, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Jennifer Martinez, Kevin Park, Lisa Chen
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            Published
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          15
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Blockchain Technology for Academic Credential
+                            Verification
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            Manuscript ID: JIS-2025-0123
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            Journal of Information Security
+                          </div>
+                          <div class="text-xs text-gray-500">Under review</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Apr 1, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Daniel Wilson, Rachel Kim
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                          >
+                            Under Review
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          -
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Virtual Reality Applications in Computer Science
+                            Education
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            DOI: 10.1145/3456789.1234567
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            ACM SIGCSE Technical Symposium
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            Proceedings, pp. 234-245
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Mar 15, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Alexander Brown, Sophia Garcia
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                          >
+                            Published
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          7
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="px-6 py-4">
+                          <div class="text-sm font-medium text-gray-900">
+                            Quantum Computing Principles for Computer Science
+                            Curricula
+                          </div>
+                          <div class="text-xs text-gray-500 mt-1">
+                            Manuscript ID: CSE-2025-0045
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">
+                            Computer Science Education
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            In preparation
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <div class="text-sm text-gray-900">Apr 2, 2025</div>
+                        </td>
+                        <td class="px-6 py-4">
+                          <div class="text-sm text-gray-900">
+                            Olivia Taylor, James Wilson
+                          </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800"
+                          >
+                            In Progress
+                          </span>
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          -
+                        </td>
+                        <td
+                          class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        >
+                          <div class="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-eye-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-gray-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-edit-line"></i>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              class="text-gray-400 hover:text-red-500"
+                            >
+                              <div
+                                class="w-5 h-5 flex items-center justify-center"
+                              >
+                                <i class="ri-delete-bin-line"></i>
+                              </div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6">
+                  <div class="flex-1 flex justify-between sm:hidden">
+                    <a
+                      href="#"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                    >
+                      Previous
+                    </a>
+                    <a
+                      href="#"
+                      class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                    >
+                      Next
+                    </a>
+                  </div>
+                  <div
+                    class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium">1</span> to
+                        <span class="font-medium">6</span> of
+                        <span class="font-medium">24</span> results
+                      </p>
+                    </div>
+                    <div>
+                      <nav
+                        class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                        aria-label="Pagination"
+                      >
+                        <a
+                          href="#"
+                          class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                        >
+                          <span class="sr-only">Previous</span>
+                          <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-arrow-left-s-line"></i>
+                          </div>
+                        </a>
+                        <a
+                          href="#"
+                          aria-current="page"
+                          class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                        >
+                          1
+                        </a>
+                        <a
+                          href="#"
+                          class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                        >
+                          2
+                        </a>
+                        <a
+                          href="#"
+                          class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                        >
+                          3
+                        </a>
+                        <span
+                          class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                        >
+                          ...
+                        </span>
+                        <a
+                          href="#"
+                          class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                        >
+                          4
+                        </a>
+                        <a
+                          href="#"
+                          class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                        >
+                          <span class="sr-only">Next</span>
+                          <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-arrow-right-s-line"></i>
+                          </div>
+                        </a>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Publication Stats -->
+              <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                  <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Publication Statistics
+                  </h3>
+                  <p class="mt-1 text-sm text-gray-500">
+                    Overview of your publication metrics and impact
+                  </p>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                  <div
+                    id="publications-chart"
+                    style="width: 100%; height: 350px;"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Citation Metrics -->
+              <div
+                class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+              >
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                  <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                      <div
+                        class="flex-shrink-0 bg-primary bg-opacity-10 rounded-md p-3"
+                      >
+                        <div
+                          class="w-6 h-6 flex items-center justify-center text-primary"
+                        >
+                          <i class="ri-file-list-line"></i>
+                        </div>
+                      </div>
+                      <div class="ml-5 w-0 flex-1">
+                        <dl>
+                          <dt
+                            class="text-sm font-medium text-gray-500 truncate"
+                          >
+                            Total Publications
+                          </dt>
+                          <dd>
+                            <div class="text-lg font-medium text-gray-900">
+                              24
+                            </div>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                  <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                      <div
+                        class="flex-shrink-0 bg-secondary bg-opacity-10 rounded-md p-3"
+                      >
+                        <div
+                          class="w-6 h-6 flex items-center justify-center text-secondary"
+                        >
+                          <i class="ri-line-chart-line"></i>
+                        </div>
+                      </div>
+                      <div class="ml-5 w-0 flex-1">
+                        <dl>
+                          <dt
+                            class="text-sm font-medium text-gray-500 truncate"
+                          >
+                            Total Citations
+                          </dt>
+                          <dd>
+                            <div class="text-lg font-medium text-gray-900">
+                              187
+                            </div>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                  <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                        <div
+                          class="w-6 h-6 flex items-center justify-center text-blue-600"
+                        >
+                          <i class="ri-bar-chart-line"></i>
+                        </div>
+                      </div>
+                      <div class="ml-5 w-0 flex-1">
+                        <dl>
+                          <dt
+                            class="text-sm font-medium text-gray-500 truncate"
+                          >
+                            H-Index
+                          </dt>
+                          <dd>
+                            <div class="text-lg font-medium text-gray-900">
+                              8
+                            </div>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                  <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 bg-amber-100 rounded-md p-3">
+                        <div
+                          class="w-6 h-6 flex items-center justify-center text-amber-600"
+                        >
+                          <i class="ri-user-star-line"></i>
+                        </div>
+                      </div>
+                      <div class="ml-5 w-0 flex-1">
+                        <dl>
+                          <dt
+                            class="text-sm font-medium text-gray-500 truncate"
+                          >
+                            i10-Index
+                          </dt>
+                          <dd>
+                            <div class="text-lg font-medium text-gray-900">
+                              6
+                            </div>
+                          </dd>
+                        </dl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add Publication Modal -->
+    <div id="addPublicationModal" class="modal">
+      <div class="modal-content">
+        <div
+          class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Add New Publication
+          </h3>
+          <button
+            type="button"
+            class="text-gray-400 hover:text-gray-500"
+            onclick="closeModal('addPublicationModal')"
+          >
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-close-line"></i>
+            </div>
+          </button>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <form id="publicationForm">
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div class="sm:col-span-6">
+                <label
+                  for="title"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Title *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="title"
+                    id="title"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="publication-type-select"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Type *</label
+                >
+                <div class="mt-1 relative">
+                  <select
+                    id="publication-type-select"
+                    name="publication-type"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border pr-8"
+                  >
+                    <option value="">Select Type</option>
+                    <option value="journal">Journal Article</option>
+                    <option value="conference">Conference Paper</option>
+                    <option value="book">Book Chapter</option>
+                    <option value="patent">Patent</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  >
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="journal"
+                  class="block text-sm font-medium text-gray-700"
+                  >Journal/Conference *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="journal"
+                    id="journal"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="publication-date"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Date *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="date"
+                    name="publication-date"
+                    id="publication-date"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="status-select"
+                  class="block text-sm font-medium text-gray-700"
+                  >Status *</label
+                >
+                <div class="mt-1 relative">
+                  <select
+                    id="status-select"
+                    name="status"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border pr-8"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="published">Published</option>
+                    <option value="in-press">In Press</option>
+                    <option value="under-review">Under Review</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  >
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="co-authors"
+                  class="block text-sm font-medium text-gray-700"
+                  >Co-Authors</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="co-authors"
+                    id="co-authors"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    placeholder="Enter co-author names separated by commas"
+                  />
+                </div>
+                <div class="mt-2 flex flex-wrap" id="author-tags">
+                  <!-- Tags will be added here dynamically -->
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label for="doi" class="block text-sm font-medium text-gray-700"
+                  >DOI/URL</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="doi"
+                    id="doi"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="abstract"
+                  class="block text-sm font-medium text-gray-700"
+                  >Abstract</label
+                >
+                <div class="mt-1">
+                  <textarea
+                    id="abstract"
+                    name="abstract"
+                    rows="4"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border border-gray-300 rounded-md p-2"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="keywords"
+                  class="block text-sm font-medium text-gray-700"
+                  >Keywords</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="keywords"
+                    id="keywords"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    placeholder="Enter keywords separated by commas"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Attachments</label
+                >
+                <div
+                  class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                >
+                  <div class="space-y-1 text-center">
+                    <div
+                      class="w-12 h-12 mx-auto flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-upload-cloud-line ri-2x"></i>
+                    </div>
+                    <div class="flex text-sm text-gray-600">
+                      <label
+                        for="file-upload"
+                        class="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none"
+                      >
+                        <span>Upload a file</span>
+                        <input
+                          id="file-upload"
+                          name="file-upload"
+                          type="file"
+                          class="sr-only"
+                        />
+                      </label>
+                      <p class="pl-1">or drag and drop</p>
+                    </div>
+                    <p class="text-xs text-gray-500">PDF, DOCX up to 10MB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+              <button
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                onclick="closeModal('addPublicationModal')"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-button text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+                onclick="savePublication()"
+              >
+                Save Publication
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Publication Modal -->
+    <div id="editPublicationModal" class="modal">
+      <div class="modal-content">
+        <div
+          class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Edit Publication
+          </h3>
+          <button
+            type="button"
+            class="text-gray-400 hover:text-gray-500"
+            onclick="closeModal('editPublicationModal')"
+          >
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-close-line"></i>
+            </div>
+          </button>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <form id="editPublicationForm">
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div class="sm:col-span-6">
+                <label
+                  for="edit-title"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Title *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="edit-title"
+                    id="edit-title"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="Advanced Neural Networks in Education: A Comprehensive Review"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="edit-publication-type"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Type *</label
+                >
+                <div class="mt-1 relative">
+                  <select
+                    id="edit-publication-type"
+                    name="edit-publication-type"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border pr-8"
+                  >
+                    <option value="">Select Type</option>
+                    <option value="journal" selected>Journal Article</option>
+                    <option value="conference">Conference Paper</option>
+                    <option value="book">Book Chapter</option>
+                    <option value="patent">Patent</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  >
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="edit-journal"
+                  class="block text-sm font-medium text-gray-700"
+                  >Journal/Conference *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="edit-journal"
+                    id="edit-journal"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="Journal of Educational Technology"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="edit-publication-date"
+                  class="block text-sm font-medium text-gray-700"
+                  >Publication Date *</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="date"
+                    name="edit-publication-date"
+                    id="edit-publication-date"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="2025-03-25"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label
+                  for="edit-status"
+                  class="block text-sm font-medium text-gray-700"
+                  >Status *</label
+                >
+                <div class="mt-1 relative">
+                  <select
+                    id="edit-status"
+                    name="edit-status"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border pr-8"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="published" selected>Published</option>
+                    <option value="in-press">In Press</option>
+                    <option value="under-review">Under Review</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+                  >
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="edit-co-authors"
+                  class="block text-sm font-medium text-gray-700"
+                  >Co-Authors</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="edit-co-authors"
+                    id="edit-co-authors"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="Sarah Johnson, Michael Lee, David Wong"
+                  />
+                </div>
+                <div class="mt-2 flex flex-wrap" id="edit-author-tags">
+                  <div class="tag">
+                    Sarah Johnson
+                    <span class="remove" onclick="this.parentElement.remove()"
+                      >×</span
+                    >
+                  </div>
+                  <div class="tag">
+                    Michael Lee
+                    <span class="remove" onclick="this.parentElement.remove()"
+                      >×</span
+                    >
+                  </div>
+                  <div class="tag">
+                    David Wong
+                    <span class="remove" onclick="this.parentElement.remove()"
+                      >×</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="edit-doi"
+                  class="block text-sm font-medium text-gray-700"
+                  >DOI/URL</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="edit-doi"
+                    id="edit-doi"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="10.1234/jed.2025.123456"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="edit-abstract"
+                  class="block text-sm font-medium text-gray-700"
+                  >Abstract</label
+                >
+                <div class="mt-1">
+                  <textarea
+                    id="edit-abstract"
+                    name="edit-abstract"
+                    rows="4"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border border-gray-300 rounded-md p-2"
+                  >
+This paper provides a comprehensive review of advanced neural network applications in educational contexts. We analyze recent developments in deep learning techniques and their potential to transform teaching and learning experiences. The review covers supervised and unsupervised learning approaches, reinforcement learning, and generative models with specific applications to educational technology.</textarea
+                  >
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label
+                  for="edit-keywords"
+                  class="block text-sm font-medium text-gray-700"
+                  >Keywords</label
+                >
+                <div class="mt-1">
+                  <input
+                    type="text"
+                    name="edit-keywords"
+                    id="edit-keywords"
+                    class="shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                    value="neural networks, education, machine learning, deep learning, educational technology"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Attachments</label
+                >
+                <div class="mt-1">
+                  <div
+                    class="flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-300"
+                  >
+                    <div class="flex items-center">
+                      <div
+                        class="w-8 h-8 flex items-center justify-center text-gray-500"
+                      >
+                        <i class="ri-file-pdf-line ri-lg"></i>
+                      </div>
+                      <span class="ml-2 text-sm text-gray-900"
+                        >neural_networks_education_review.pdf</span
+                      >
+                    </div>
+                    <button
+                      type="button"
+                      class="text-gray-400 hover:text-red-500"
+                    >
+                      <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-delete-bin-line"></i>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="mt-3 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
+                >
+                  <div class="space-y-1 text-center">
+                    <div
+                      class="w-12 h-12 mx-auto flex items-center justify-center text-gray-400"
+                    >
+                      <i class="ri-upload-cloud-line ri-2x"></i>
+                    </div>
+                    <div class="flex text-sm text-gray-600">
+                      <label
+                        for="edit-file-upload"
+                        class="relative cursor-pointer bg-white rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none"
+                      >
+                        <span>Upload a file</span>
+                        <input
+                          id="edit-file-upload"
+                          name="edit-file-upload"
+                          type="file"
+                          class="sr-only"
+                        />
+                      </label>
+                      <p class="pl-1">or drag and drop</p>
+                    </div>
+                    <p class="text-xs text-gray-500">PDF, DOCX up to 10MB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+              <button
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+                onclick="closeModal('editPublicationModal')"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-button text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+                onclick="updatePublication()"
+              >
+                Update Publication
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Publication Modal -->
+    <div id="viewPublicationModal" class="modal">
+      <div class="modal-content">
+        <div
+          class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Publication Details
+          </h3>
+          <button
+            type="button"
+            class="text-gray-400 hover:text-gray-500"
+            onclick="closeModal('viewPublicationModal')"
+          >
+            <div class="w-6 h-6 flex items-center justify-center">
+              <i class="ri-close-line"></i>
+            </div>
+          </button>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <div class="space-y-6">
+            <div>
+              <h3 class="text-xl font-medium text-gray-900">
+                Advanced Neural Networks in Education: A Comprehensive Review
+              </h3>
+              <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400 mr-1.5"
+                >
+                  <i class="ri-calendar-line"></i>
+                </div>
+                <span>Published on March 25, 2025</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+              <div class="sm:col-span-3">
+                <h4 class="text-sm font-medium text-gray-500">
+                  Publication Type
+                </h4>
+                <p class="mt-1 text-sm text-gray-900">Journal Article</p>
+              </div>
+
+              <div class="sm:col-span-3">
+                <h4 class="text-sm font-medium text-gray-500">
+                  Journal/Conference
+                </h4>
+                <p class="mt-1 text-sm text-gray-900">
+                  Journal of Educational Technology
+                </p>
+                <p class="text-xs text-gray-500">
+                  Vol. 45, Issue 2, pp. 123-145
+                </p>
+              </div>
+
+              <div class="sm:col-span-3">
+                <h4 class="text-sm font-medium text-gray-500">Status</h4>
+                <p class="mt-1">
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                  >
+                    Published
+                  </span>
+                </p>
+              </div>
+
+              <div class="sm:col-span-3">
+                <h4 class="text-sm font-medium text-gray-500">Citations</h4>
+                <p class="mt-1 text-sm text-gray-900">12</p>
+              </div>
+
+              <div class="sm:col-span-6">
+                <h4 class="text-sm font-medium text-gray-500">Co-Authors</h4>
+                <p class="mt-1 text-sm text-gray-900">
+                  Sarah Johnson, Michael Lee, David Wong
+                </p>
+              </div>
+
+              <div class="sm:col-span-6">
+                <h4 class="text-sm font-medium text-gray-500">DOI/URL</h4>
+                <p class="mt-1 text-sm text-primary hover:underline">
+                  <a href="#" target="_blank">10.1234/jed.2025.123456</a>
+                </p>
+              </div>
+
+              <div class="sm:col-span-6">
+                <h4 class="text-sm font-medium text-gray-500">Abstract</h4>
+                <p class="mt-1 text-sm text-gray-900">
+                  This paper provides a comprehensive review of advanced neural
+                  network applications in educational contexts. We analyze
+                  recent developments in deep learning techniques and their
+                  potential to transform teaching and learning experiences. The
+                  review covers supervised and unsupervised learning approaches,
+                  reinforcement learning, and generative models with specific
+                  applications to educational technology. Our findings suggest
+                  that neural networks can significantly enhance personalized
+                  learning, assessment, and educational content creation, while
+                  also highlighting challenges related to data privacy,
+                  algorithmic bias, and implementation barriers in educational
+                  institutions.
+                </p>
+              </div>
+
+              <div class="sm:col-span-6">
+                <h4 class="text-sm font-medium text-gray-500">Keywords</h4>
+                <div class="mt-1 flex flex-wrap">
+                  <span
+                    class="mr-2 mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    neural networks
+                  </span>
+                  <span
+                    class="mr-2 mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    education
+                  </span>
+                  <span
+                    class="mr-2 mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    machine learning
+                  </span>
+                  <span
+                    class="mr-2 mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    deep learning
+                  </span>
+                  <span
+                    class="mr-2 mb-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    educational technology
+                  </span>
+                </div>
+              </div>
+
+              <div class="sm:col-span-6">
+                <h4 class="text-sm font-medium text-gray-500">Attachments</h4>
+                <div class="mt-1">
+                  <div
+                    class="flex items-center bg-gray-50 p-3 rounded-md border border-gray-300"
+                  >
+                    <div
+                      class="w-8 h-8 flex items-center justify-center text-gray-500"
+                    >
+                      <i class="ri-file-pdf-line ri-lg"></i>
+                    </div>
+                    <span class="ml-2 text-sm text-gray-900"
+                      >neural_networks_education_review.pdf</span
+                    >
+                    <a
+                      href="#"
+                      class="ml-auto text-primary hover:text-primary-dark text-sm"
+                    >
+                      <div class="w-5 h-5 flex items-center justify-center">
+                        <i class="ri-download-line"></i>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-5">
+              <h4 class="text-sm font-medium text-gray-500 mb-3">
+                Citation Metrics
+              </h4>
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="bg-gray-50 p-3 rounded-md">
+                  <div class="text-xs text-gray-500">Google Scholar</div>
+                  <div class="text-lg font-medium text-gray-900">12</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-md">
+                  <div class="text-xs text-gray-500">Web of Science</div>
+                  <div class="text-lg font-medium text-gray-900">9</div>
+                </div>
+                <div class="bg-gray-50 p-3 rounded-md">
+                  <div class="text-xs text-gray-500">Scopus</div>
+                  <div class="text-lg font-medium text-gray-900">10</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              type="button"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50 whitespace-nowrap"
+              onclick="closeModal('viewPublicationModal')"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-button text-white bg-primary hover:bg-primary/90 whitespace-nowrap"
+              onclick="closeModal('viewPublicationModal'); openModal('editPublicationModal')"
+            >
+              <div class="w-4 h-4 mr-2 flex items-center justify-center">
+                <i class="ri-edit-line"></i>
+              </div>
+              Edit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmationModal" class="modal">
+      <div class="modal-content max-w-md">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="sm:flex sm:items-start">
+            <div
+              class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+            >
+              <div
+                class="w-6 h-6 flex items-center justify-center text-red-600"
+              >
+                <i class="ri-error-warning-line"></i>
+              </div>
+            </div>
+            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Delete Publication
+              </h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  Are you sure you want to delete this publication? This action
+                  cannot be undone.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button
+              type="button"
+              class="w-full inline-flex justify-center rounded-button border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm whitespace-nowrap"
+              onclick="deletePublication()"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              class="mt-3 w-full inline-flex justify-center rounded-button border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm whitespace-nowrap"
+              onclick="closeModal('deleteConfirmationModal')"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <div class="flex items-center">
+        <div class="w-5 h-5 mr-3 flex items-center justify-center">
+          <i class="ri-check-line"></i>
+        </div>
+        <div id="toast-message">Publication saved successfully!</div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script>
+      // Initialize the publications chart
+      var chartDom = document.getElementById("publications-chart");
+      var myChart = echarts.init(chartDom);
+      var option = {
+        animation: false,
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e2e8f0",
+          textStyle: {
+            color: "#1f2937",
+          },
+        },
+        legend: {
+          data: ["Publications", "Citations"],
+          bottom: 0,
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "10%",
+          top: "3%",
+          containLabel: true,
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: true,
+          data: ["2020", "2021", "2022", "2023", "2024", "2025"],
+          axisLine: {
+            lineStyle: {
+              color: "#e2e8f0",
+            },
+          },
+          axisLabel: {
+            color: "#1f2937",
+          },
+        },
+        yAxis: [
+          {
+            type: "value",
+            name: "Publications",
+            axisLine: {
+              show: false,
+            },
+            axisLabel: {
+              color: "#1f2937",
+            },
+            splitLine: {
+              lineStyle: {
+                color: "#e2e8f0",
+              },
+            },
+          },
+          {
+            type: "value",
+            name: "Citations",
+            axisLine: {
+              show: false,
+            },
+            axisLabel: {
+              color: "#1f2937",
+            },
+            splitLine: {
+              show: false,
+            },
+          },
+        ],
+        series: [
+          {
+            name: "Publications",
+            type: "bar",
+            barWidth: "40%",
+            data: [3, 4, 5, 6, 4, 2],
+            itemStyle: {
+              color: "rgba(87, 181, 231, 1)",
+              borderRadius: 4,
+            },
+          },
+          {
+            name: "Citations",
+            type: "line",
+            yAxisIndex: 1,
+            smooth: true,
+            lineStyle: {
+              width: 3,
+            },
+            showSymbol: false,
+            data: [12, 25, 38, 45, 52, 15],
+            color: "rgba(251, 191, 114, 1)",
+          },
+        ],
+      };
+      myChart.setOption(option);
+
+      // Responsive chart
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+
+      // Modal functions
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      function confirmDelete() {
+        openModal("deleteConfirmationModal");
+      }
+
+      function savePublication() {
+        closeModal("addPublicationModal");
+        showToast("Publication added successfully!");
+      }
+
+      function updatePublication() {
+        closeModal("editPublicationModal");
+        showToast("Publication updated successfully!");
+      }
+
+      function deletePublication() {
+        closeModal("deleteConfirmationModal");
+        showToast("Publication deleted successfully!");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-message").textContent = message;
+        toast.style.display = "block";
+
+        setTimeout(function () {
+          toast.style.display = "none";
+        }, 3000);
+      }
+
+      // Close modals when clicking outside
+      window.onclick = function (event) {
+        if (event.target.classList.contains("modal")) {
+          event.target.style.display = "none";
+        }
+      };
+
+      // Handle co-author tags
+      document.getElementById("co-authors").addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === ",") {
+          e.preventDefault();
+          const value = this.value.trim();
+          if (value) {
+            addAuthorTag(value);
+            this.value = "";
+          }
+        }
+      });
+
+      function addAuthorTag(name) {
+        const tagsContainer = document.getElementById("author-tags");
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML =
+          name +
+          ' <span class="remove" onclick="this.parentElement.remove()">×</span>';
+        tagsContainer.appendChild(tag);
+      }
+    </script>
+  </body>
+</html>
